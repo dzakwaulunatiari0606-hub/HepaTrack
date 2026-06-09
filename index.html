@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HepaTrack Pro - Screening & Clinical Education</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .option-card.active { border-color: #2563eb; background-color: #eff6ff; }
+        .type-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; font-weight: 800; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <nav class="bg-white border-b sticky top-0 z-50 py-4 shadow-sm">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-microscope text-blue-600 text-2xl"></i>
+                <span class="text-xl font-black tracking-tighter">Hepa<span class="text-blue-600">Track</span> <span class="text-xs font-normal text-slate-400">Med-v2.5</span></span>
+            </div>
+            <div class="hidden md:block text-[10px] text-right leading-tight text-slate-400 font-bold uppercase">
+                Clinical Diagnostics Project<br>Universitas Lampung
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-3xl">
+        
+        <div id="mainApp" class="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-100 overflow-hidden border border-slate-100">
+            <div class="w-full bg-slate-100 h-1.5">
+                <div id="progressBar" class="bg-blue-600 h-1.5 transition-all duration-700" style="width: 25%"></div>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <div id="step1" class="step-content">
+                    <div class="text-center py-6">
+                        <h1 class="text-3xl font-extrabold mb-4">Skrining & Edukasi Klinis Hepatitis</h1>
+                        <p class="text-slate-500 mb-6 leading-relaxed">Alat bantu identifikasi awal risiko Hepatitis A, B, dan C berdasarkan pedoman diagnosis laboratorium terkini.</p>
+                        
+                        <div class="bg-amber-50 border border-amber-200 text-amber-900 p-5 rounded-2xl text-left text-xs font-medium mb-8 max-w-xl mx-auto space-y-3 shadow-sm">
+                            <p class="font-bold flex items-center gap-2 text-amber-800 text-sm">
+                                <i class="fa-solid fa-triangle-exclamation"></i> PENTING / DISCLAIMER MEDIS:
+                            </p>
+                            <p class="leading-relaxed">1. Alat skrining ini hanya bersifat edukasi dan deteksi dini berbasis algoritma risiko, <strong>bukan merupakan diagnosis medis resmi</strong>.</p>
+                            <p class="leading-relaxed">2. Hasil yang dikeluarkan tidak menggantikan konsultasi, pemeriksaan fisik, atau diagnosis laboratorium langsung oleh tenaga kesehatan profesional.</p>
+                            <label class="flex items-center gap-3 mt-4 p-3 bg-white rounded-xl border border-amber-300 cursor-pointer hover:bg-amber-50/50 transition-all">
+                                <input type="checkbox" id="agreeCheckbox" class="rounded text-blue-600 w-4 h-4 border-slate-300 focus:ring-blue-500">
+                                <span class="text-[11px] font-bold text-slate-700">Saya memahami dan menyetujui ketentuan di atas untuk melanjutkan.</span>
+                            </label>
+                        </div>
+
+                        <button id="startBtn" onclick="checkAgreement()" disabled class="bg-slate-300 text-slate-600 cursor-not-allowed px-12 py-4 rounded-2xl font-bold transition-all">Mulai Skrining</button>
+                    </div>
+                </div>
+
+                <div id="step2" class="step-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-black">Gejala yang Dialami:</h2>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Manifestasi Klinis</p>
+                        <div onclick="toggleCheck(this, 'all', 20)" class="option-card flex items-center p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-blue-200 transition-all">
+                            <i class="fa-solid fa-head-side-virus mr-4 text-orange-500 text-xl"></i>
+                            <span class="flex-grow font-bold text-sm text-left">Gejala seperti flu (Demam, Kelelahan, Hilang Nafsu Makan)</span>
+                            <i class="fa-solid fa-circle-check text-slate-100 check-icon"></i>
+                        </div>
+                        <div onclick="toggleCheck(this, 'all', 40)" class="option-card flex items-center p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-blue-200 transition-all">
+                            <i class="fa-solid fa-eye mr-4 text-yellow-500 text-xl"></i>
+                            <span class="flex-grow font-bold text-sm text-left">Ikterus (Mata/Kulit Kuning) & Urin Gelap</span>
+                            <i class="fa-solid fa-circle-check text-slate-100 check-icon"></i>
+                        </div>
+                        <div onclick="toggleCheck(this, 'all', 10)" class="option-card flex items-center p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-blue-200 transition-all">
+                            <i class="fa-solid fa-stomach mr-4 text-red-500 text-xl"></i>
+                            <span class="flex-grow font-bold text-sm text-left">Nyeri Perut Kanan Atas atau Mual/Muntah</span>
+                            <i class="fa-solid fa-circle-check text-slate-100 check-icon"></i>
+                        </div>
+                    </div>
+
+                    <button onclick="nextStep(3)" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 transition-all">Lanjutkan ke Riwayat Paparan</button>
+                </div>
+
+                <div id="step3" class="step-content hidden">
+                    <h2 class="text-xl font-black mb-6">Riwayat Paparan (Pilih yang Sesuai):</h2>
+                    <div class="space-y-3">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Jalur Transmisi</p>
+                        <div onclick="toggleCheck(this, 'hepA', 40)" class="option-card flex items-center p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-blue-200 transition-all">
+                            <i class="fa-solid fa-faucet-drip mr-4 text-blue-400 text-xl"></i>
+                            <span class="flex-grow font-bold text-sm text-left">Konsumsi air/makanan terkontaminasi (Fecal-Oral)</span>
+                            <span class="type-badge bg-green-100 text-green-700 ml-2">Tipe A</span>
+                        </div>
+                        <div onclick="toggleCheck(this, 'hepB', 40)" class="option-card flex items-center p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-blue-200 transition-all">
+                            <i class="fa-solid fa-venus-mars mr-4 text-purple-500 text-xl"></i>
+                            <span class="flex-grow font-bold text-sm text-left">Kontak seksual atau transmisi dari Ibu ke Anak (Perinatal)</span>
+                            <span class="type-badge bg-blue-100 text-blue-700 ml-2">Tipe B</span>
+                        </div>
+                        <div onclick="toggleCheck(this, 'hepBC', 40)" class="option-card flex items-center p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-blue-200 transition-all">
+                            <i class="fa-solid fa-syringe mr-4 text-red-500 text-xl"></i>
+                            <span class="flex-grow font-bold text-sm text-left">Penggunaan jarum suntik bersama/tato/transfusi darah non-skrining</span>
+                            <span class="type-badge bg-red-100 text-red-700 ml-2">Tipe B/C</span>
+                        </div>
+                    </div>
+                    <button onclick="nextStep(4)" class="w-full mt-8 bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-xl transition-all">Analisis Skor Klinis</button>
+                </div>
+
+                <div id="step4" class="step-content hidden text-center">
+                    <h2 class="text-2xl font-black mb-4">Hasil Analisis Risiko</h2>
+                    
+                    <div id="finalScore" class="mb-6 flex flex-col items-center justify-center gap-3">
+                        <div class="text-5xl font-black text-blue-600">0%</div>
+                    </div>
+                    
+                    <div id="typeAnalysis" class="bg-blue-50 p-6 rounded-3xl mb-6 text-sm font-bold text-blue-800 leading-relaxed text-left md:text-center">
+                    </div>
+
+                    <div class="text-left space-y-4 mb-8">
+                        <div class="p-5 bg-slate-50 border border-slate-100 rounded-3xl">
+                            <h4 class="font-black text-xs uppercase text-slate-400 mb-3 tracking-wider">Rekomendasi Tes Laboratorium (Pedoman Kontemporer):</h4>
+                            <ul id="labTests" class="text-sm font-bold text-slate-700 list-disc list-inside space-y-2.5">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <button onclick="location.reload()" class="text-blue-600 font-bold underline hover:text-blue-800 transition-all">Ulangi Skrining</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="mt-12 space-y-8">
+            <h2 class="text-2xl font-black text-center text-slate-900">Pusat Edukasi & Konsensus Diagnosis Laboratorium</h2>
+            
+            <div class="grid grid-cols-1 gap-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <h3 class="font-black text-lg mb-3 flex items-center gap-2 text-slate-800">
+                        <span class="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-xs font-bold">A</span>
+                        Hepatitis A (HAV) — Infeksi Akut & Self-Limiting
+                    </h3>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        Hepatitis A disebabkan oleh virus RNA tanpa selubung (*Picornaviridae*). Transmisi terjadi secara <strong>fecal-oral</strong> melalui air atau makanan yang terkontaminasi, serta kontak erat harian. Infeksi ini tidak berkembang menjadi kronis dan umumnya sembuh secara spontan.
+                    </p>
+                    <div class="bg-green-50 p-4 rounded-2xl text-[11px] font-bold text-green-900 border border-green-200 space-y-1">
+                        <p class="uppercase tracking-wider text-green-700">Standar Emas Laboratorium:</p>
+                        <p>• <strong>Anti-HAV IgM:</strong> Positif pada fase akut (terdeteksi sejak awal gejala hingga 4–6 bulan post-infeksi).</p>
+                        <p>• <strong>Anti-HAV IgG:</strong> Menandakan imunitas jangka panjang baik akibat infeksi masa lalu maupun vaksinasi.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <h3 class="font-black text-lg mb-3 flex items-center gap-2 text-slate-800">
+                        <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xs font-bold">B</span>
+                        Hepatitis B (HBV) — Infeksi Sistemik & Risiko Kronisitas Tinggi
+                    </h3>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        Disebabkan oleh virus DNA berselubung (*Hepadnaviridae*). Berdasarkan <em>WHO Global Hepatitis Report</em>, transmisi perinatal (dari ibu ke anak saat persalinan) dan transmisi horizontal pada anak usia dini merupakan rute utama pembentukan infeksi kronis, di samping paparan perkutan (jarum suntik, tato) dan kontak seksual tidak aman. Infeksi kronis berisiko tinggi berkembang menjadi sirosis hepatis dan karsinoma hepatoseluler (HCC).
+                    </p>
+                    <div class="bg-blue-50 p-4 rounded-2xl text-[11px] font-bold text-blue-900 border border-blue-200 space-y-1">
+                        <p class="uppercase tracking-wider text-blue-700">Interpretasi Serologi Kompleks (Pedoman CDC):</p>
+                        <p>• <strong>HBsAg (Hepatitis B Surface Antigen):</strong> Marka utama infeksi aktif (akut atau kronis). Jika menetap >6 bulan, menegakkan diagnosis infeksi kronis.</p>
+                        <p>• <strong>Anti-HBs (Antibody to HBsAg):</strong> Menandakan imunitas (pasca-vaksinasi atau resolusi infeksi alami).</p>
+                        <p>• <strong>Anti-HBc Total:</strong> Menunjukkan riwayat paparan nyata terhadap virus (tidak terbentuk dari vaksinasi).</p>
+                        <p>• <strong>HBV DNA:</strong> Pengukuran kuantitatif load virus via Real-Time PCR untuk memandu dan memantau terapi antiviral.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <h3 class="font-black text-lg mb-3 flex items-center gap-2 text-slate-800">
+                        <span class="w-8 h-8 bg-red-100 text-red-600 rounded-lg flex items-center justify-center text-xs font-bold">C</span>
+                        Hepatitis C (HCV) — <em>Silent Infection</em> dengan Transmisi Parenteral
+                    </h3>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        Virus RNA rantai tunggal (*Flaviviridae*). Mayoritas infeksi awal bersifat asimtomatik, namun sekitar 70%–85% kasus berkembang menjadi infeksi kronis yang progresif. Penularan dominan terjadi melalui paparan darah langsung, seperti penggunaan jarum suntik tidak steril secara bergantian di kalangan pengguna obat suntik, prosedur medis non-standar, atau transfusi darah pra-skrining massal yang ketat.
+                    </p>
+                    <div class="bg-red-50 p-4 rounded-2xl text-[11px] font-bold text-red-900 border border-red-200 space-y-1">
+                        <p class="uppercase tracking-wider text-red-700">Alur Diagnostik Dua Tahap WHO:</p>
+                        <p>• <strong>Skrining Serologi (Anti-HCV):</strong> Mendeteksi paparan imunitas. Hasil positif <strong>belum</strong> membuktikan adanya infeksi aktif saat ini karena antibodi tetap menetap meskipun infeksi telah sembuh spontan.</p>
+                        <p>• <strong>Konfirmasi Molekuler (HCV RNA Kuantitatif):</strong> Wajib dilakukan jika Anti-HCV reaktif untuk mendeteksi replikasi aktual virus sebelum memulai terapi <em>Direct-Acting Antivirals</em> (DAA).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm overflow-x-auto">
+                <h3 class="font-black text-lg mb-4 text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-table-list text-blue-600"></i> Matriks Perbandingan Parameter Klinis
+                </h3>
+                <table class="w-full text-xs text-left border-collapse border border-slate-200 min-w-[600px]">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                            <th class="p-3 border-r border-slate-200">Parameter Klinis</th>
+                            <th class="p-3 border-r border-slate-200">Hepatitis A (HAV)</th>
+                            <th class="p-3 border-r border-slate-200">Hepatitis B (HBV)</th>
+                            <th class="p-3">Hepatitis C (HCV)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-600 font-semibold">
+                        <tr class="border-b border-slate-200">
+                            <td class="p-3 bg-slate-50 border-r border-slate-200 font-bold">Karakteristik Virus</td>
+                            <td class="p-3 border-r border-slate-200">RNA Virus (*Picornaviridae*)</td>
+                            <td class="p-3 border-r border-slate-200">DNA Virus (*Hepadnaviridae*)</td>
+                            <td class="p-3">RNA Virus (*Flaviviridae*)</td>
+                        </tr>
+                        <tr class="border-b border-slate-200 bg-slate-50/30">
+                            <td class="p-3 bg-slate-50 border-r border-slate-200 font-bold">Rute Transmisi Utama</td>
+                            <td class="p-3 border-r border-slate-200">Fecal-Oral (Makanan/Air)</td>
+                            <td class="p-3 border-r border-slate-200">Perinatal, Seksual, Darah/Perkutan</td>
+                            <td class="p-3">Parenteral (Darah, Jarum Suntik)</td>
+                        </tr>
+                        <tr class="border-b border-slate-200">
+                            <td class="p-3 bg-slate-50 border-r border-slate-200 font-bold">Sifat Infeksi</td>
+                            <td class="p-3 border-r border-slate-200">Selalu Akut (Tidak pernah Kronis)</td>
+                            <td class="p-3 border-r border-slate-200">Akut & Kronis (Tergantung Usia Paparan)</td>
+                            <td class="p-3">Seringkali Kronis (70% - 85% Kasus)</td>
+                        </tr>
+                        <tr class="border-b border-slate-200 bg-slate-50/30">
+                            <td class="p-3 bg-slate-50 border-r border-slate-200 font-bold">Skrining Awal Lab</td>
+                            <td class="p-3 border-r border-slate-200 text-green-600 font-bold">Anti-HAV IgM</td>
+                            <td class="p-3 border-r border-slate-200 text-blue-600 font-bold">HBsAg</td>
+                            <td class="p-3 text-red-600 font-bold">Anti-HCV (Serologi)</td>
+                        </tr>
+                        <tr class="border-b border-slate-200">
+                            <td class="p-3 bg-slate-50 border-r border-slate-200 font-bold">Uji Konfirmasi Lanjutan</td>
+                            <td class="p-3 border-r border-slate-200">Klinis / Pemantauan Fungsi Hati</td>
+                            <td class="p-3 border-r border-slate-200">HBV DNA Kuantitatif (PCR)</td>
+                            <td class="p-3">HCV RNA Kuantitatif (PCR Molekuler)</td>
+                        </tr>
+                        <tr class="bg-slate-50/30">
+                            <td class="p-3 bg-slate-50 border-r border-slate-200 font-bold">Pencegahan Utama</td>
+                            <td class="p-3 border-r border-slate-200">Vaksinasi & Sanitasi Lingkungan</td>
+                            <td class="p-3 border-r border-slate-200">Vaksinasi (Dosis Lahir & Rutin)</td>
+                            <td class="p-3">Pengendalian Bahaya & Keamanan Jarum (Belum Ada Vaksin)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="mt-16 pb-8 text-center border-t pt-8">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 text-center">Project Developers</p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <div class="text-center">
+                    <p class="text-sm font-extrabold text-slate-700">Dzakwa Ulunatiari Ramadani</p>
+                    <p class="text-[10px] text-blue-600 font-bold tracking-widest">2318011012</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm font-extrabold text-slate-700">Muhammad Arya Zulkarnaen</p>
+                    <p class="text-[10px] text-blue-600 font-bold tracking-widest">2318011114</p>
+                </div>
+            </div>
+            <p class="text-[9px] text-slate-300 mt-8 font-medium italic">Sumber Data Klinis: WHO Consolidated Guidance on Hepatitis 2024/2026 & CDC Diagnostics Consensus</p>
+            <p class="text-[9px] text-slate-300 font-medium">Fakultas Kedokteran • Universitas Lampung • 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        let scores = { total: 0, hepA: 0, hepB: 0, hepC: 0 };
+
+        // Toggle Disclaimer Checkbox to enable start button
+        document.getElementById('agreeCheckbox').addEventListener('change', function(e) {
+            const btn = document.getElementById('startBtn');
+            if(e.target.checked) {
+                btn.disabled = false;
+                btn.className = "bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all cursor-pointer";
+            } else {
+                btn.disabled = true;
+                btn.className = "bg-slate-300 text-slate-600 cursor-not-allowed px-12 py-4 rounded-2xl font-bold transition-all";
+            }
+        });
+
+        function checkAgreement() {
+            if(document.getElementById('agreeCheckbox').checked) {
+                nextStep(2);
+            }
+        }
+
+        function toggleCheck(el, type, points) {
+            el.classList.toggle('active');
+            const icon = el.querySelector('.check-icon');
+            const isActive = el.classList.contains('active');
+            
+            const multiplier = isActive ? 1 : -1;
+
+            if(type === 'all') {
+                scores.hepA += (points * multiplier);
+                scores.hepB += (points * multiplier);
+                scores.hepC += (points * multiplier);
+            } else if(type === 'hepBC') {
+                scores.hepB += (points * multiplier);
+                scores.hepC += (points * multiplier);
+            } else {
+                scores[type] += (points * multiplier);
+            }
+            
+            scores.total += (points * multiplier);
+            
+            if(icon) {
+                if(isActive) icon.classList.replace('text-slate-100', 'text-blue-600');
+                else icon.classList.replace('text-blue-600', 'text-slate-100');
+            }
+        }
+
+        function nextStep(step) {
+            document.querySelectorAll('.step-content').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step' + step).classList.remove('hidden');
+            document.getElementById('progressBar').style.width = (step * 25) + '%';
+            if(step === 4) calculateLogic();
+        }
+
+        function calculateLogic() {
+            const display = document.getElementById('finalScore');
+            const analysis = document.getElementById('typeAnalysis');
+            const labUl = document.getElementById('labTests');
+            
+            const totalFinal = Math.min(Math.max(scores.total, 0), 100);
+            
+            let riskLevel = "";
+            let riskColor = "";
+            if (totalFinal >= 70) {
+                riskLevel = "RISIKO TINGGI (Indikasi Pemeriksaan Segera)";
+                riskColor = "text-red-700 bg-red-100 border border-red-200";
+            } else if (totalFinal >= 30) {
+                riskLevel = "RISIKO SEDANG (Pemantauan Diperlukan)";
+                riskColor = "text-orange-700 bg-orange-100 border border-orange-200";
+            } else if (totalFinal > 0) {
+                riskLevel = "RISIKO RENDAH";
+                riskColor = "text-green-700 bg-green-100 border border-green-200";
+            } else {
+                riskLevel = "RISIKO SANGAT RENDAH / MANIFESTASI KLINIS NEGATIF";
+                riskColor = "text-slate-700 bg-slate-100 border border-slate-200";
+            }
+
+            display.innerHTML = `
+                <div class="text-5xl font-black text-blue-600">${totalFinal}%</div>
+                <div class="text-[10px] font-black tracking-widest px-4 py-1.5 mt-2 rounded-full inline-block uppercase ${riskColor}">${riskLevel}</div>
+            `;
+
+            let resultHTML = "";
+            let tests = [];
+
+            if (totalFinal === 0) {
+                resultHTML = "Tidak terdeteksi manifestasi klinis akut atau riwayat paparan transmisi. Tetap jalankan Perilaku Hidup Bersih dan Sehat (PHBS) sesuai rekomendasi kementerian kesehatan.";
+                tests = ["Tidak ada tes diagnostik mendesak yang disarankan.", "Pastikan kelengkapan riwayat imunisasi Hepatitis B dasar Anda."];
+            } else if(scores.hepA > scores.hepB && scores.hepA > scores.hepC) {
+                resultHTML = "Kecenderungan Klinis: Risiko Mengarah pada Hepatitis A Epidemik/Akut. Manifestasi dan rute penularan dominan melalui jalur fecal-oral (kontaminasi air/makanan).";
+                tests = [
+                    "<strong>Anti-HAV IgM Serum:</strong> Uji serologi utama untuk menegakkan diagnosis infeksi akut Hepatitis A.",
+                    "<strong>Pemeriksaan Fungsi Hati (ALT/AST Serum):</strong> Untuk mengukur derajat inflamasi dan kerusakan akut hepatosit hati."
+                ];
+            } else if (scores.hepB >= scores.hepC && scores.hepB > scores.hepA) {
+                resultHTML = "Kecenderungan Klinis: Risiko Paparan Infeksi Hepatitis B. Riwayat konsisten dengan transmisi mukosa, vertikal (ibu ke anak), atau parenteral.";
+                tests = [
+                    "<strong>HBsAg (Hepatitis B Surface Antigen):</strong> Langkah pertama skrining wajib untuk membuktikan adanya infeksi aktif.",
+                    "<strong>Anti-HBc Total:</strong> Menilai riwayat paparan nyata terhadap virus (membedakan status infeksi alami dari respon imunisasi).",
+                    "<strong>HBV DNA Kuantitatif (Real-time PCR):</strong> Diperlukan jika hasil HBsAg Reaktif, guna mengukur tingkat replikasi aktif virus sebelum terapi antiviral."
+                ];
+            } else if (scores.hepC > scores.hepB) {
+                resultHTML = "Kecenderungan Klinis: Risiko Paparan Kronisitas Hepatitis C. Faktor risiko transmisi parenteral langsung (kontak darah, jarum tidak steril) bersifat dominan.";
+                tests = [
+                    "<strong>Anti-HCV Serologi (Rapid/EIA):</strong> Uji penapisan antibodi awal yang direkomendasikan oleh WHO.",
+                    "<strong>HCV RNA Kuantitatif (Uji Molekuler):</strong> Langkah konfirmasi krusial. Hasil positif memastikan infeksi aktif berreplikasi, membedakannya dari kasus *spontaneous clearance*."
+                ];
+            } else {
+                resultHTML = "Kecenderungan Klinis: Gejala Prodromal Akut / Risiko Campuran. Manifestasi klinis menyerupai hepatitis viral akut, namun rute transmisi belum berpusat secara spesifik.";
+                tests = [
+                    "<strong>Panel Screening Hepatitis Viral Akut:</strong> Tes simultan HBsAg, Anti-HCV, dan Anti-HAV IgM.",
+                    "<strong>Kimia Klinik Hati:</strong> Pemeriksaan SGOT/SGPT, Bilirubin Total, Bilirubin Direk, serta Gamma-GT."
+                ];
+            }
+            
+            analysis.innerText = resultHTML;
+            labUl.innerHTML = tests.map(t => `<li class="mb-1.5 leading-relaxed">${t}</li>`).join('');
+        }
+    </script>
+</body>
+</html>
